@@ -34,12 +34,21 @@ std::shared_ptr<int> createSocket(){
     return serverSocket;
 }
 
-void bindSocket(std::shared_ptr<int> serverSocket){
+bool bindSocket(std::shared_ptr<int> serverSocket){
     sockaddr_in serverAddress;
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_port = htons(8080);
     serverAddress.sin_addr.s_addr = INADDR_ANY;
-    bind(*serverSocket, sockaddr* addr, socklen_t addrlen);
+    try{
+        bind(*serverSocket, sockaddr* addr, socklen_t addrlen);
+        //add unbind here
+        return true;
+    }
+    catch(const std::exception& e){
+        //add port name retrieveal
+        std::cerr << "Error binding socket: " << e.what() << std::endl;
+        return false;
+    }
 }
 int main() {
     std::string osName = getOsName();
