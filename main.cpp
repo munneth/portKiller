@@ -29,11 +29,18 @@ std::string getOsName() {
     #endif
 }
 
-void createSocket(){
-    auto serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+std::shared_ptr<int> createSocket(){
+    auto serverSocket = std::make_shared<int>(socket(AF_INET, SOCK_STREAM, 0));
+    return serverSocket;
 }
 
-
+void bindSocket(std::shared_ptr<int> serverSocket){
+    sockaddr_in serverAddress;
+    serverAddress.sin_family = AF_INET;
+    serverAddress.sin_port = htons(8080);
+    serverAddress.sin_addr.s_addr = INADDR_ANY;
+    bind(*serverSocket, sockaddr* addr, socklen_t addrlen);
+}
 int main() {
     std::string osName = getOsName();
     
